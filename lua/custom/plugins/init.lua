@@ -6,7 +6,8 @@ return {
   'nvim-neo-tree/neo-tree.nvim',
   dependencies = {
     'nvim-lua/plenary.nvim',
-    'nvim-tree/nvim-web-devicons', -- Icons
+    -- 'nvim-tree/nvim-web-devicons', -- Icons
     'MunifTanjim/nui.nvim',
   },
+  { 'nvim-tree/nvim-web-devicons', opts = { default = true } },
 }
