@@ -6,6 +6,27 @@ vim.opt.colorcolumn = '80'
 vim.opt.relativenumber = true
 vim.opt.number = true -- Keep the absolute number on the current line
 
+vim.diagnostic.config {
+  virtual_text = true,
+}
+
+vim.api.nvim_create_user_command('OilTelescope', function()
+  require('telescope.builtin').find_files {
+    prompt_title = 'Find Folder',
+    find_command = { 'fdfind', '--type', 'd', '--color', 'never' },
+    attach_mappings = function(_, map)
+      map('i', '<CR>', function(prompt_bufnr)
+        local entry = require('telescope.actions.state').get_selected_entry()
+        require('telescope.actions').close(prompt_bufnr)
+        vim.cmd('Oil ' .. entry.path)
+      end)
+      return true
+    end,
+  }
+end, {})
+
+vim.keymap.set('n', '<leader>st', '<cmd>OilTelescope<cr>', { desc = '[S]earch File [T]ree' })
+
 vim.api.nvim_create_autocmd('ColorScheme', {
   pattern = '*',
   callback = function()
@@ -22,14 +43,6 @@ vim.api.nvim_create_autocmd('FileType', {
   end,
 })
 
-require('telescope').setup {
-  defaults = {
-    file_ignore_patterns = {
-      'node_modules',
-    },
-  },
-}
-
 return {
 
   -- 'nvim-neo-tree/neo-tree.nvim',
@@ -45,6 +58,17 @@ return {
     config = function()
       require('nvim-ts-autotag').setup()
     end,
+  },
+  {
+    'stevearc/oil.nvim',
+    ---@module 'oil'
+    ---@type oil.SetupOpts
+    opts = {},
+    -- Optional dependencies
+    dependencies = { { 'echasnovski/mini.icons', opts = {} } },
+    -- dependencies = { "nvim-tree/nvim-web-devicons" }, -- use if you prefer nvim-web-devicons
+    -- Lazy loading is not recommended because it is very tricky to make it work correctly in all situations.
+    lazy = false,
   },
   {
     'folke/ts-comments.nvim',
