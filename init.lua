@@ -920,6 +920,9 @@ require('lazy').setup({
   { -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
+    dependencies = {
+      'nvim-treesitter/nvim-treesitter-textobjects', -- 👈 this is required
+    },
     main = 'nvim-treesitter.configs', -- Sets main module to use for opts
     -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
     opts = {
@@ -932,6 +935,24 @@ require('lazy').setup({
         --  If you are experiencing weird indenting issues, add the language to
         --  the list of additional_vim_regex_highlighting and disabled languages for indent.
         additional_vim_regex_highlighting = { 'ruby' },
+      },
+      textobjects = {
+        move = {
+          enable = true,
+          set_jumps = true,
+          goto_next_start = {
+            [']m'] = '@function.outer',
+          },
+          goto_previous_start = {
+            ['[m'] = '@function.outer',
+          },
+          goto_next_end = {
+            [']M'] = '@function.outer',
+          },
+          goto_previous_end = {
+            ['[M'] = '@function.outer',
+          },
+        },
       },
       indent = { enable = true, disable = { 'ruby' } },
     },
